@@ -203,3 +203,5 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,intellij,gradle
 src/main/resources/application-real-db.yml
+src/main/resources/application-api-key.yml
+src/main/resources/application-oauth.yml
