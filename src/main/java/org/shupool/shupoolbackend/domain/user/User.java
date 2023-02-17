@@ -22,13 +22,13 @@ public class User extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
+    private String kakaoId;
+
+    @Column(nullable = false)
     private String name;
 
     @Column
     private String picture;
-
-    @Column
-    private String kakaoId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
