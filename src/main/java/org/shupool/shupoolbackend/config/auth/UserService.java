@@ -12,6 +12,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.shupool.shupoolbackend.domain.user.Role;
+import org.shupool.shupoolbackend.domain.user.User;
 import org.shupool.shupoolbackend.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -76,7 +78,7 @@ public class UserService {
         return access_Token;
     }
 
-    public void createKakaoUser(String token) {
+    public void loginKakaoUser(String token) {
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
@@ -106,16 +108,11 @@ public class UserService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            Long id = element.getAsJsonObject().get("id").getAsLong();
-
-//            if ()
-
+            String id = element.getAsJsonObject().get("id").getAsString();
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
-            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
-
             String nickname = properties.getAsJsonObject().get("nickname").getAsString();
+            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
             String email = "";
-
 
             boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email")
                 .getAsBoolean();
@@ -124,8 +121,12 @@ public class UserService {
                 email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
             }
 
-//            System.out.println("id : " + id);
-//            System.out.println("email : " + email);
+            if (!userRepository.existsUser(nickname, id).isPresent()) {
+                userRepository.save(User.builder()
+                    .nickname(nickname).email(email)
+                    .socialId(id).role(Role.USER)
+                    .build());
+            }
 
             br.close();
 
