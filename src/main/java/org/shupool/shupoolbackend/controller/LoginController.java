@@ -3,6 +3,7 @@ package org.shupool.shupoolbackend.controller;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.shupool.shupoolbackend.config.auth.UserService;
+import org.shupool.shupoolbackend.config.jwt.TokenInfo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,14 +19,14 @@ public class LoginController {
     private final UserService userService;
 
     @GetMapping(value = "/login")
-    public void login(@RequestBody Map<String, String> map) {
+    public TokenInfo login(@RequestBody Map<String, String> map) {
         String accessToken = map.get("code");
-        userService.loginKakaoUser(accessToken);
+        return userService.loginKakaoUser(accessToken);
     }
 
     @ResponseBody
-    @GetMapping("/kakao")
-    public void kakaoCallback(@RequestParam String code) {
-        System.out.println(code);
+    @GetMapping("/member/test")
+    public String kakaoCallback() {
+        return "success";
     }
 }

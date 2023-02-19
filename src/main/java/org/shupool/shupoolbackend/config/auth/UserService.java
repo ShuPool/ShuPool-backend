@@ -4,81 +4,40 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.shupool.shupoolbackend.config.jwt.JwtTokenProvider;
+import org.shupool.shupoolbackend.config.jwt.TokenInfo;
 import org.shupool.shupoolbackend.domain.user.Role;
-import org.shupool.shupoolbackend.domain.user.User;
-import org.shupool.shupoolbackend.domain.user.UserRepository;
+import org.shupool.shupoolbackend.domain.user.Member;
+import org.shupool.shupoolbackend.domain.user.MemberRepository;
+import org.shupool.shupoolbackend.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Getter
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class UserService {
 
     @Value("${kakao-client_id}")
     private String kakaoClientId;
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public String getKakaoAccessToken(String code) {
-        String access_Token = "";
-        String refresh_Token = "";
-        String reqURL = "https://kauth.kakao.com/oauth/token";
-
-        try {
-            URL url = new URL(reqURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-            StringBuilder sb = new StringBuilder();
-            sb.append("grant_type=authorization_code");
-            sb.append("&client_id=e4a81d5a6acbda948310e08e2eafc123");
-            sb.append("&redirect_uri=http://localhost:9000/oauth/kakao");
-            sb.append("&code=" + code);
-            bw.write(sb.toString());
-            bw.flush();
-
-            int responseCode = conn.getResponseCode();
-            System.out.println("responseCode : " + responseCode);
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = "";
-            String result = "";
-
-            while ((line = br.readLine()) != null) {
-                result += line;
-            }
-            System.out.println("response body : " + result);
-
-            JsonElement element = JsonParser.parseString(result);
-
-            access_Token = element.getAsJsonObject().get("access_token").getAsString();
-            refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
-
-            System.out.println("access_token : " + access_Token);
-            System.out.println("refresh_token : " + refresh_Token);
-
-            br.close();
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return access_Token;
-    }
-
-    public void loginKakaoUser(String token) {
+    public TokenInfo loginKakaoUser(String token) {
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
@@ -111,7 +70,6 @@ public class UserService {
             String id = element.getAsJsonObject().get("id").getAsString();
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
             String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
             String email = "";
 
             boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email")
@@ -121,18 +79,35 @@ public class UserService {
                 email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
             }
 
-            if (!userRepository.existsUser(nickname, id).isPresent()) {
-                userRepository.save(User.builder()
-                    .nickname(nickname).email(email)
-                    .socialId(id).role(Role.USER)
-                    .build());
-            }
+            Member member = findUserOrCreate(nickname, id, email);
+
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(member.getSocialId(), member.getPassword());
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
             br.close();
+            return tokenInfo;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    @Transactional
+    public Member findUserOrCreate(String nickname, String socialId, String email) {
+        Member member = null;
+        if (!memberRepository.existsMember(nickname, socialId).isPresent()) {
+            member = Member.builder()
+                .nickname(nickname).email(email)
+                .socialId(socialId).role(Role.USER)
+                .password(PasswordUtil.generateRandomPassword())
+                .roles(Collections.singletonList(Role.USER.name()))
+                .build();
+            memberRepository.save(member);
+            return member;
+        }
+        return memberRepository.findBySocialId(socialId).get();
     }
 
 }
