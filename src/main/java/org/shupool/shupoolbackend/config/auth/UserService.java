@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.Collections;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.shupool.shupoolbackend.config.auth.dto.KakaoInfo;
 import org.shupool.shupoolbackend.config.jwt.JwtTokenProvider;
 import org.shupool.shupoolbackend.config.jwt.TokenInfo;
 import org.shupool.shupoolbackend.domain.user.Role;
@@ -66,20 +67,11 @@ public class UserService {
 
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
-
-            String id = element.getAsJsonObject().get("id").getAsString();
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
-            String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-            String email = "";
 
-            boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email")
-                .getAsBoolean();
+            KakaoInfo kakaoInfo = KakaoInfo.convert(element, properties);
 
-            if (hasEmail) {
-                email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
-            }
-
-            Member member = findUserOrCreate(nickname, id, email);
+            Member member = findUserOrCreate(kakaoInfo);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(member.getSocialId(), member.getPassword());
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -95,19 +87,19 @@ public class UserService {
     }
 
     @Transactional
-    public Member findUserOrCreate(String nickname, String socialId, String email) {
+    public Member findUserOrCreate(KakaoInfo kakaoInfo) {
         Member member = null;
-        if (!memberRepository.existsMember(nickname, socialId).isPresent()) {
+        if (!memberRepository.existsMember(kakaoInfo.getNickname(), kakaoInfo.getSocialId()).isPresent()) {
             member = Member.builder()
-                .nickname(nickname).email(email)
-                .socialId(socialId).role(Role.USER)
+                .nickname(kakaoInfo.getNickname()).email(kakaoInfo.getEmail())
+                .socialId(kakaoInfo.getSocialId())
                 .password(PasswordUtil.generateRandomPassword())
                 .roles(Collections.singletonList(Role.USER.name()))
                 .build();
             memberRepository.save(member);
             return member;
         }
-        return memberRepository.findBySocialId(socialId).get();
+        return memberRepository.findBySocialId(kakaoInfo.getSocialId()).get();
     }
 
 }

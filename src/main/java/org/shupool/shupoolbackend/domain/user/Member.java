@@ -42,11 +42,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private String email;
 
     private String imageUrl;
-    private String refreshToken;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
@@ -87,9 +82,5 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public void updateRefreshToken(String updateRefreshToken) {
-        this.refreshToken = updateRefreshToken;
     }
 }
