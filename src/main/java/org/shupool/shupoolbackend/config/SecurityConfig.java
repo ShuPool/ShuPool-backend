@@ -22,17 +22,27 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .httpBasic().disable()
-            .csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests()
+//        http
+//            .httpBasic().disable()
+//            .csrf().disable()
+//            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//            .and()
+//            .authorizeRequests()
+//            .antMatchers("/api/v1/login").permitAll()
+//            .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile").permitAll()
+//            .anyRequest().authenticated()
+//            .and()
+//            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.httpBasic().disable();
+        http.formLogin().disable();
+        http.authorizeRequests()
             .antMatchers("/api/v1/login").permitAll()
-            .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile").permitAll()
-            .anyRequest().authenticated()
+            .antMatchers("/swagger-ui.html/**", "/h2-console/**").permitAll()
+//            .anyRequest().authenticated()
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.csrf().disable();
+
         return http.build();
     }
 

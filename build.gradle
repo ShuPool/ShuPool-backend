@@ -25,6 +25,10 @@ dependencies {
     implementation 'com.h2database:h2:1.4.193'
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'junit:junit:4.13.1'
+
+    //swagger
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+
     //security
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
