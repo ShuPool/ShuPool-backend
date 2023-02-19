@@ -1,6 +1,7 @@
 package org.shupool.shupoolbackend.config;
 
 import lombok.RequiredArgsConstructor;
+import org.h2.engine.Role;
 import org.shupool.shupoolbackend.config.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,8 +30,10 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests()
             .antMatchers("/swagger-ui/**", "/h2-console/**", "/v3/api-docs/**").permitAll()
-            .antMatchers("/admin").hasRole("ROLE_ADMIN")
-            .anyRequest().authenticated();
+            .antMatchers("/api/v1/login").permitAll()
+            .antMatchers("/api/v1/member/test").hasRole("USER")
+            .antMatchers("/admin").hasRole("ROLE_ADMIN");
+//            .anyRequest().authenticated();
 
         http.formLogin().disable();
 

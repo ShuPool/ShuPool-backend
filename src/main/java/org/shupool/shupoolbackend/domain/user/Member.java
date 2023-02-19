@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import org.shupool.shupoolbackend.domain.common.BaseTimeEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 
 @Getter @Builder
 @NoArgsConstructor @AllArgsConstructor
@@ -44,6 +46,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private String imageUrl;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="ROLES", joinColumns = @JoinColumn(name="member_id"))
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 

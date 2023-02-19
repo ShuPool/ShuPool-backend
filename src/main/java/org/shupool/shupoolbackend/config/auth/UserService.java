@@ -53,7 +53,6 @@ public class UserService {
 
             //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
-            System.out.println("responseCode : " + responseCode);
 
             //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -63,7 +62,6 @@ public class UserService {
             while ((line = br.readLine()) != null) {
                 result += line;
             }
-            System.out.println("response body : " + result);
 
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
@@ -94,6 +92,7 @@ public class UserService {
                 .nickname(kakaoInfo.getNickname()).email(kakaoInfo.getEmail())
                 .socialId(kakaoInfo.getSocialId())
                 .password(PasswordUtil.generateRandomPassword())
+                .imageUrl(kakaoInfo.getProfileImage())
                 .roles(Collections.singletonList(Role.USER.name()))
                 .build();
             memberRepository.save(member);
