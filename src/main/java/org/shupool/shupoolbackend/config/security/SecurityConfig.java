@@ -41,7 +41,7 @@ public class SecurityConfig {
             .antMatchers("/swagger-ui/**", "/h2-console/**", "/v3/api-docs/**").permitAll()
             .antMatchers("/api/v1/login").permitAll()
             .antMatchers("/api/v1/member/test").hasRole("USER")
-            .antMatchers("/admin").hasRole("ROLE_ADMIN")
+            .antMatchers("/admin").hasRole("ADMIN")
             .anyRequest().authenticated().and()
             // JWT 인증 필터 적용
             .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
