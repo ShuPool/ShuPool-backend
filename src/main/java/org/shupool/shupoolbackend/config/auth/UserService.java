@@ -12,16 +12,14 @@ import java.util.Collections;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.shupool.shupoolbackend.config.auth.dto.KakaoInfo;
-import org.shupool.shupoolbackend.config.jwt.JwtTokenProvider;
+import org.shupool.shupoolbackend.config.jwt.JwtProvider;
 import org.shupool.shupoolbackend.config.jwt.TokenInfo;
-import org.shupool.shupoolbackend.domain.user.Role;
-import org.shupool.shupoolbackend.domain.user.Member;
-import org.shupool.shupoolbackend.domain.user.MemberRepository;
+import org.shupool.shupoolbackend.domain.member.Role;
+import org.shupool.shupoolbackend.domain.member.Member;
+import org.shupool.shupoolbackend.domain.member.MemberRepository;
 import org.shupool.shupoolbackend.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,8 +34,9 @@ public class UserService {
 
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProvider jwtProvider;
 
+    @Transactional
     public TokenInfo loginKakaoUser(String token) {
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
@@ -70,10 +69,7 @@ public class UserService {
             KakaoInfo kakaoInfo = KakaoInfo.convert(element, properties);
 
             Member member = findUserOrCreate(kakaoInfo);
-
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(member.getSocialId(), member.getPassword());
-            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-            TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+            TokenInfo tokenInfo = jwtProvider.createToken(member.getSocialId());
 
             br.close();
             return tokenInfo;
@@ -93,7 +89,7 @@ public class UserService {
                 .socialId(kakaoInfo.getSocialId())
                 .password(PasswordUtil.generateRandomPassword())
                 .imageUrl(kakaoInfo.getProfileImage())
-                .roles(Collections.singletonList(Role.USER.name()))
+                .roles(Collections.singletonList(Role.USER.getKey()))
                 .build();
             memberRepository.save(member);
             return member;

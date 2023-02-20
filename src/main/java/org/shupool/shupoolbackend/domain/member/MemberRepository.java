@@ -1,4 +1,4 @@
-package org.shupool.shupoolbackend.domain.user;
+package org.shupool.shupoolbackend.domain.member;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

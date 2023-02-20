@@ -1,4 +1,4 @@
-package org.shupool.shupoolbackend.domain.user;
+package org.shupool.shupoolbackend.domain.member;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
