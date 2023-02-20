@@ -1,4 +1,4 @@
-package org.shupool.shupoolbackend.config.jwt;
+package org.shupool.shupoolbackend.config.security.jwt;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;

@@ -1,4 +1,4 @@
-package org.shupool.shupoolbackend.config.jwt;
+package org.shupool.shupoolbackend.config.security.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

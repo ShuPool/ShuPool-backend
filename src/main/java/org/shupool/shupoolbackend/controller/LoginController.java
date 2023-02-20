@@ -2,8 +2,8 @@ package org.shupool.shupoolbackend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.shupool.shupoolbackend.service.user.UserService;
-import org.shupool.shupoolbackend.config.auth.dto.AuthCode;
-import org.shupool.shupoolbackend.config.jwt.TokenInfo;
+import org.shupool.shupoolbackend.config.security.auth.dto.AuthCode;
+import org.shupool.shupoolbackend.config.security.jwt.TokenInfo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

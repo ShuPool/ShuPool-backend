@@ -1,4 +1,4 @@
-package org.shupool.shupoolbackend.config.auth.dto;
+package org.shupool.shupoolbackend.config.security.auth.dto;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

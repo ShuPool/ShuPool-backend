@@ -1,4 +1,4 @@
-package org.shupool.shupoolbackend.config.auth;
+package org.shupool.shupoolbackend.config.security.auth;
 
 import static org.junit.jupiter.api.Assertions.*;
 

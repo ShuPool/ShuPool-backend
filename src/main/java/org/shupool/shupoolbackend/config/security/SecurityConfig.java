@@ -1,13 +1,12 @@
-package org.shupool.shupoolbackend.config;
+package org.shupool.shupoolbackend.config.security;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.shupool.shupoolbackend.config.jwt.JwtAuthenticationFilter;
-import org.shupool.shupoolbackend.config.jwt.JwtProvider;
-import org.shupool.shupoolbackend.domain.member.Role;
+import org.shupool.shupoolbackend.config.security.jwt.JwtAuthenticationFilter;
+import org.shupool.shupoolbackend.config.security.jwt.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;

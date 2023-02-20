@@ -11,15 +11,16 @@ import java.net.URL;
 import java.util.Collections;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.shupool.shupoolbackend.config.auth.dto.KakaoInfo;
-import org.shupool.shupoolbackend.config.jwt.JwtProvider;
-import org.shupool.shupoolbackend.config.jwt.TokenInfo;
+import org.shupool.shupoolbackend.config.security.auth.dto.KakaoInfo;
+import org.shupool.shupoolbackend.config.security.jwt.JwtProvider;
+import org.shupool.shupoolbackend.config.security.jwt.TokenInfo;
 import org.shupool.shupoolbackend.domain.member.Role;
 import org.shupool.shupoolbackend.domain.member.Member;
 import org.shupool.shupoolbackend.domain.member.MemberRepository;
 import org.shupool.shupoolbackend.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +34,9 @@ public class UserService {
     private String kakaoClientId;
 
     private final MemberRepository memberRepository;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Transactional
     public TokenInfo loginKakaoUser(String token) {
@@ -87,7 +89,7 @@ public class UserService {
             member = Member.builder()
                 .nickname(kakaoInfo.getNickname()).email(kakaoInfo.getEmail())
                 .socialId(kakaoInfo.getSocialId())
-                .password(PasswordUtil.generateRandomPassword())
+                .password(passwordEncoder.encode(PasswordUtil.generateRandomPassword()))
                 .imageUrl(kakaoInfo.getProfileImage())
                 .roles(Collections.singletonList(Role.USER.getKey()))
                 .build();

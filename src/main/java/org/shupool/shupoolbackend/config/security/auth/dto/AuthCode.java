@@ -1,4 +1,4 @@
-package org.shupool.shupoolbackend.config.auth.dto;
+package org.shupool.shupoolbackend.config.security.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

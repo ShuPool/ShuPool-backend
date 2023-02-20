@@ -1,4 +1,4 @@
-package org.shupool.shupoolbackend.config.jwt;
+package org.shupool.shupoolbackend.config.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -12,7 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.shupool.shupoolbackend.config.auth.CustomUserDetailsService;
+import org.shupool.shupoolbackend.config.security.auth.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
