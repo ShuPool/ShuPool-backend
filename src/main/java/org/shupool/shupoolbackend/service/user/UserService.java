@@ -1,4 +1,4 @@
-package org.shupool.shupoolbackend.config.auth;
+package org.shupool.shupoolbackend.service.user;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
