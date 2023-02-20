@@ -19,7 +19,6 @@ import org.shupool.shupoolbackend.domain.member.Member;
 import org.shupool.shupoolbackend.domain.member.MemberRepository;
 import org.shupool.shupoolbackend.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
