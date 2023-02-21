@@ -21,7 +21,7 @@ public class Path {
     private Long id;
 
     private String displayName;
-    private String fullPath;
+    private String address;
 
     private PathType pathType;
 

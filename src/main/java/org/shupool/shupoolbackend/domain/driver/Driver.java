@@ -8,7 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import org.shupool.shupoolbackend.domain.group.DriveGroup;
+import org.shupool.shupoolbackend.domain.drive_group.DriveGroup;
 import org.shupool.shupoolbackend.domain.member.Member;
 
 @Entity

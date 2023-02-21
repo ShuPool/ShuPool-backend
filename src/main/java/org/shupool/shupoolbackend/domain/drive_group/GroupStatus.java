@@ -1,4 +1,4 @@
-package org.shupool.shupoolbackend.domain.group;
+package org.shupool.shupoolbackend.domain.drive_group;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
