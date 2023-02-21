@@ -23,6 +23,8 @@ public class Path {
     private String displayName;
     private String fullPath;
 
+    private PathType pathType;
+
     private Long longitude;
     private Long latitude;
 }
