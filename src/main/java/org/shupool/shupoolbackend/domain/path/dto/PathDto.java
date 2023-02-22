@@ -12,16 +12,12 @@ public class PathDto {
 
     private PathType pathType;
 
-    private Long longitude;
-    private Long latitude;
 
     public static PathDto entityToDto(Path path) {
         return PathDto.builder()
                 .displayName(path.getDisplayName())
                 .address(path.getAddress())
                 .pathType(path.getPathType())
-                .longitude(path.getLongitude())
-                .latitude(path.getLatitude())
                 .build();
     }
 }

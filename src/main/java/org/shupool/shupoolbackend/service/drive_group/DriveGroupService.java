@@ -1,6 +1,7 @@
 package org.shupool.shupoolbackend.service.drive_group;
 
 import lombok.RequiredArgsConstructor;
+import org.shupool.shupoolbackend.domain.drive_group.DriveGroup;
 import org.shupool.shupoolbackend.domain.drive_group.DriveGroupRepository;
 import org.shupool.shupoolbackend.domain.drive_group.dto.DriveGroupDto;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,9 @@ public class DriveGroupService {
 
     private DriveGroupRepository driveGroupRepository;
 
-    public DriveGroupDto createDriveGroup() {
-        return null;
+    public DriveGroupDto createDriveGroup(DriveGroupDto driveGroupDto) {
+        DriveGroup driveGroup = DriveGroup.initDriveGroup(driveGroupDto);
+        driveGroupRepository.save(driveGroup);
+        return driveGroupDto;
     }
 }
