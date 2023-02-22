@@ -1,14 +1,11 @@
 package org.shupool.shupoolbackend.domain.path;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Getter @Builder
 @NoArgsConstructor @AllArgsConstructor
@@ -24,7 +21,4 @@ public class Path {
     private String address;
 
     private PathType pathType;
-
-    private Long longitude;
-    private Long latitude;
 }
