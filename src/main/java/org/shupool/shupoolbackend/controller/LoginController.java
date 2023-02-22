@@ -1,16 +1,13 @@
 package org.shupool.shupoolbackend.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.shupool.shupoolbackend.service.user.UserService;
 import org.shupool.shupoolbackend.config.security.auth.dto.AuthCode;
 import org.shupool.shupoolbackend.config.security.jwt.TokenInfo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.shupool.shupoolbackend.service.user.UserService;
+import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "로그인 API")
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1")
 @RestController
