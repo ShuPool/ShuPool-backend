@@ -10,6 +10,7 @@ import java.security.Key;
 import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.shupool.shupoolbackend.config.security.auth.CustomUserDetailsService;
@@ -67,12 +68,12 @@ public class JwtProvider {
     // 권한정보 획득
     // Spring Security 인증과정에서 권한확인을 위한 기능
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getAccount(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getSocialId(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    // 토큰에 담겨있는 유저 account 획득
-    public String getAccount(String token) {
+    // 토큰에 담겨있는 유저 socialId 획득
+    public String getSocialId(String token) {
         String subject = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody()
             .getSubject();
         return subject;
@@ -98,5 +99,12 @@ public class JwtProvider {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public String socialIdFromRequest(HttpServletRequest request) {
+        String token = resolveToken(request).substring(7);
+        String subject = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody()
+            .getSubject();
+        return subject;
     }
 }

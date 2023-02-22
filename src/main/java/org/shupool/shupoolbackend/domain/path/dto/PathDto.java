@@ -1,5 +1,8 @@
 package org.shupool.shupoolbackend.domain.path.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import org.shupool.shupoolbackend.domain.path.Path;
@@ -12,12 +15,17 @@ public class PathDto {
 
     private PathType pathType;
 
-
     public static PathDto entityToDto(Path path) {
         return PathDto.builder()
                 .displayName(path.getDisplayName())
                 .address(path.getAddress())
                 .pathType(path.getPathType())
                 .build();
+    }
+
+    public static List<PathDto> entitiesToDtos(List<Path> paths) {
+        return paths.stream()
+            .map(PathDto::entityToDto)
+            .collect(Collectors.toCollection(ArrayList::new));
     }
 }
